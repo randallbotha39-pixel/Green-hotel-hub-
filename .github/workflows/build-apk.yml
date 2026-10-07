@@ -23,7 +23,6 @@ jobs:
           mkdir -p phone project
 
           unzip -q GreenHotelHubPhoneBuild.zip -d phone
-
           unzip -q phone/GreenHotelHubCloudBuild.zip -d project
 
       - name: Find Android project
@@ -33,8 +32,7 @@ jobs:
 
           if [ -z "$FILE" ]; then
             echo "Android project not found"
-            echo "Files found:"
-            find project -maxdepth 4 -type f
+            find project -maxdepth 5 -type f
             exit 1
           fi
 
@@ -48,12 +46,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK 36
+      - name: Prepare Android SDK
         run: |
-          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
       - name: Set up Gradle 9.6
         uses: gradle/actions/setup-gradle@v4
