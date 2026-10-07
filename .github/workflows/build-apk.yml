@@ -14,15 +14,21 @@ jobs:
       - name: Download repository
         uses: actions/checkout@v4
 
-      - name: Unzip Android project
+      - name: Unzip build packages
         run: |
           mkdir project
           unzip -q GreenHotelHubPhoneBuild.zip -d project
+          unzip -q project/GreenHotelHubCloudBuild.zip -d project
 
       - name: Find Android project
         id: find_project
         run: |
-          ROOT=$(find project -name settings.gradle -o -name settings.gradle.kts | head -1 | xargs dirname)
+          FILE=$(find project -type f \( -name settings.gradle -o -name settings.gradle.kts \) -print -quit)
+          if [ -z "$FILE" ]; then
+            echo "Android project not found"
+            exit 1
+          fi
+          ROOT=$(dirname "$FILE")
           echo "root=$ROOT" >> "$GITHUB_OUTPUT"
 
       - name: Set up Java 17
