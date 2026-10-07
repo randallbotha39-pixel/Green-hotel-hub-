@@ -22,6 +22,7 @@ jobs:
           rm -rf project
           mkdir project
           unzip -q GreenHotelHubPhoneBuild.zip -d project
+          unzip -q project/GreenHotelHubCloudBuild.zip -d project
 
       - name: Find Android project
         id: find_project
@@ -30,7 +31,7 @@ jobs:
 
           if [ -z "$FILE" ]; then
             echo "Android project not found"
-            find project -maxdepth 4 -type f
+            find project -maxdepth 5 -type f
             exit 1
           fi
 
